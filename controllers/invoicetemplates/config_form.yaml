@@ -1,0 +1,21 @@
+# ===================================
+#  Form Behavior Config
+# ===================================
+
+# Record name
+name: Invoice Template
+
+# Model Form Field configuration
+form: ~/plugins/alxy/cashier/models/invoicetemplate/fields.yaml
+
+# Model Class name
+modelClass: Alxy\Cashier\Models\InvoiceTemplate
+
+# Default redirect location
+defaultRedirect: alxy/cashier/invoicetemplates
+
+# Update page
+update:
+    title: Edit Invoice Template
+    redirect: alxy/cashier/invoicetemplates
+    redirectClose: system/settings

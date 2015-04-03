@@ -1,0 +1,120 @@
+<!-- Credit card form -->
+<div class="row">
+    <div class="col-xs-12 col-md-4">
+        <div class="panel panel-default">
+            <div class="panel-heading clearfix">
+                <h3 class="panel-title"><img class="pull-right" src="http://i76.imgup.net/accepted_c22e0.png">Payment <br>
+                    Details</h3>
+            </div>
+            <div class="panel-body">
+                {{ form_open({ request: 'onSubscribe', role: 'form', id: 'payment-form' }) }}
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <div class="form-group">
+                                <label for="subscriptionType">SUBSCRIPTION TYPE</label>
+
+                                <select class="form-control" name="subscriptionType">
+                                    <option value="basic">Basic Membership</option>
+                                    <option value="plus">Plus Membership</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <div class="form-group">
+                                <label for="cardNumber">CARD NUMBER</label>
+
+                                <div class="input-group">
+                                    <input type="text" class="form-control" name="cardNumber"
+                                           placeholder="Valid Card Number" required autofocus data-stripe="number"/>
+                                    <span class="input-group-addon"><i class="fa fa-credit-card"></i></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-7 col-md-7">
+                            <div class="form-group">
+                                <label for="expMonth">EXPIRATION DATE</label>
+
+                                <div class="col-xs-6 col-lg-6 pl-ziro">
+                                    <input type="text" class="form-control" name="expMonth" placeholder="MM" required
+                                           data-stripe="exp_month"/>
+                                </div>
+                                <div class="col-xs-6 col-lg-6 pl-ziro">
+                                    <input type="text" class="form-control" name="expYear" placeholder="YY" required
+                                           data-stripe="exp_year"/>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xs-5 col-md-5 pull-right">
+                            <div class="form-group">
+                                <label for="cvCode">CV CODE</label>
+                                <input type="password" class="form-control" name="cvCode" placeholder="CV" required
+                                       data-stripe="cvc"/>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <div class="form-group">
+                                <label for="couponCode">COUPON CODE</label>
+                                <input type="text" class="form-control" name="couponCode"/>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <button class="btn btn-success btn-lg btn-block" type="submit">Start Subscription</button>
+                        </div>
+                    </div>
+                    <div class="row" style="display:none;">
+                        <div class="col-xs-12">
+                            <p class="payment-errors"></p>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    var PublishableKey = 'pk_test_gnXgJimWWjn5gJNv9MjKs3Aq'; // Replace with your API publishable key
+    Stripe.setPublishableKey(PublishableKey);
+
+    jQuery(function($) {
+        $('#payment-form').submit(function(event) {
+            var $form = $(this);
+
+            // Disable the submit button to prevent repeated clicks
+            $form.find('button').prop('disabled', true);
+
+            Stripe.card.createToken($form, stripeResponseHandler);
+
+            // Prevent the form from submitting with the default action
+            return false;
+        });
+    });
+
+    function stripeResponseHandler(status, response) {
+        var $form = $('#payment-form');
+        $form.find('.payment-errors').closest('.row').hide();
+
+        if (response.error) {
+            console.log(response.error.message);
+            // Show the errors on the form
+            $form.find('.payment-errors').text(response.error.message);
+            $form.find('.payment-errors').closest('.row').show();
+            $form.find('button').prop('disabled', false);
+        } else {
+            // response contains id and card, which contains additional card details
+            var token = response.id;
+            // Insert the token into the form so it gets submitted to the server
+            $form.append($('<input type="hidden" name="stripeToken" />').val(token));
+            // and submit
+            $form.get(0).submit();
+        }
+    };
+
+</script>

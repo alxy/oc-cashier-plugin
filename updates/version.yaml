@@ -1,0 +1,6 @@
+1.0.1:
+  - First version of Cashier
+  - add_cashier_columns.php
+1.0.2:
+  - Add invoice template
+  - create_templates_table.php

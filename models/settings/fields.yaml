@@ -1,0 +1,14 @@
+# ===================================
+#  Form Field Definitions
+# ===================================
+
+tabs:
+  fields:
+      stripe_secret:
+          span: auto
+          label: Secret Key
+          tab: Keys
+      stripe_public:
+          span: auto
+          label: Publishable Key
+          tab: Keys
